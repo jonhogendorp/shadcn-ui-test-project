@@ -24,7 +24,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function Component() {
+export default                                                                                   function Component() {
   return (
     <div>
       <ChartContainer config={chartConfig} className='min-h-[200px] w-full'>
