@@ -1,8 +1,12 @@
 import React from "react";
+import { TvIcon } from "lucide-react";
 
 export default function page() {
 	return (
-		<div className='max-w-[950px] flex items-center justify-center h-screen mx-auto'>
+		<div className='max-w-[950px] flex-col flex items-center justify-center h-screen mx-auto'>
+			<button className='btn btn-xs sm:btn-md '>
+				<TvIcon className='w-3 h-3 sm:h-5 sm:w-5'></TvIcon>
+			</button>
 			<figure className='flex flex-col gap-1 rounded-xl bg-gray-950/5 p-1 inset-ring inset-ring-gray-950/5 dark:bg-white/10 dark:inset-ring-white/10'>
 				<div className='not-prose overflow-auto rounded-lg bg-white outline outline-white/5 dark:bg-gray-950/50'>
 					<div className='my-8 overflow-hidden'>
