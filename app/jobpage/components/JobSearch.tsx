@@ -9,6 +9,7 @@ interface Job {
 	company: string;
 	location: string;
 	type: "Full-time" | "Part-time" | "Contract" | "Remote";
+	skills: string[];
 	description: string;
 	postedDate: string;
 	salary?: string;
@@ -19,7 +20,14 @@ interface FilterState {
 	jobType: string[];
 	location: string;
 	sortBy: "newest" | "relevance";
+	skills: string[]; // Add skills filter if needed
 }
+
+const numbers = [1, 2, 3, 4, 5];
+const strings = ["one", "two", "three", "four", "five"];
+
+const numbersAndStrings = { ...numbers, ...strings };
+console.log(numbersAndStrings);
 
 const JobSearch: React.FC = () => {
 	// Sample job data (you would fetch this from an API in a real application)
@@ -30,6 +38,7 @@ const JobSearch: React.FC = () => {
 			company: "Tech Solutions Inc.",
 			location: "New York, NY",
 			type: "Full-time",
+			skills: ["React", "JavaScript", "Node"],
 			description:
 				"We are looking for a skilled frontend developer with React experience.",
 			postedDate: "2025-05-15",
@@ -41,6 +50,7 @@ const JobSearch: React.FC = () => {
 			company: "Data Systems",
 			location: "Remote",
 			type: "Full-time",
+			skills: ["Node", "Python", "Go"],
 			description: "Experienced backend developer needed for our growing team.",
 			postedDate: "2025-05-10",
 			salary: "$100,000 - $130,000",
@@ -51,6 +61,7 @@ const JobSearch: React.FC = () => {
 			company: "Creative Labs",
 			location: "San Francisco, CA",
 			type: "Contract",
+			skills: ["JavaScript", "React", "Ruby"],
 			description:
 				"Looking for a creative UI/UX designer for a 6-month project.",
 			postedDate: "2025-05-18",
@@ -61,6 +72,7 @@ const JobSearch: React.FC = () => {
 			company: "Cloud Solutions",
 			location: "Remote",
 			type: "Full-time",
+			skills: ["Go", "Python", "Java"],
 			description: "Join our team to build and maintain cloud infrastructure.",
 			postedDate: "2025-05-12",
 			salary: "$110,000 - $140,000",
@@ -71,6 +83,7 @@ const JobSearch: React.FC = () => {
 			company: "Startup Ventures",
 			location: "Austin, TX",
 			type: "Part-time",
+			skills: ["PHP", "JavaScript", "React"],
 			description:
 				"Looking for a part-time web developer for ongoing projects.",
 			postedDate: "2025-05-16",
@@ -86,6 +99,7 @@ const JobSearch: React.FC = () => {
 			company: "New Company",
 			location: "Remote",
 			type: "Full-time",
+			skills: ["JavaScript", "React"],
 			description: "This is a newly added job.",
 			postedDate: new Date().toISOString().split("T")[0],
 			salary: "$100,000",
@@ -99,6 +113,8 @@ const JobSearch: React.FC = () => {
 		jobType: [],
 		location: "",
 		sortBy: "newest",
+		skills: [],
+		// Add skills filter if needed
 	});
 
 	// Filtered jobs
@@ -132,6 +148,16 @@ const JobSearch: React.FC = () => {
 		});
 	};
 
+	const handleSkillsChange = (type: string) => {
+		const updatedSkills = filters.skills.includes(type)
+			? filters.skills.filter((t) => t !== type)
+			: [...filters.skills, type];
+		setFilters({
+			...filters,
+			skills: updatedSkills,
+		});
+	};
+
 	// Handle sort change
 	const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		setFilters({
@@ -151,7 +177,8 @@ const JobSearch: React.FC = () => {
 				(job) =>
 					job.title.toLowerCase().includes(searchLower) ||
 					job.company.toLowerCase().includes(searchLower) ||
-					job.description.toLowerCase().includes(searchLower)
+					job.description.toLowerCase().includes(searchLower) ||
+					job.skills.some((skill) => skill.toLowerCase().includes(searchLower))
 			);
 		}
 
@@ -163,6 +190,12 @@ const JobSearch: React.FC = () => {
 		// Apply location filter
 		if (filters.location) {
 			result = result.filter((job) => job.location.includes(filters.location));
+		}
+
+		if (filters.skills.length > 0) {
+			result = result.filter((job) =>
+				job.skills.some((skill) => filters.skills.includes(skill))
+			);
 		}
 
 		// Apply sorting
@@ -247,6 +280,35 @@ const JobSearch: React.FC = () => {
 						))}
 					</div>
 				</div>
+				{/* Skills Filter */}
+				<div>
+					<h3 className='font-medium mb-2'>Skills</h3>
+					<div className='space-y-2'>
+						{[
+							"JavaScript",
+							"React",
+							"Node",
+							"Python",
+							"Go",
+							"Ruby",
+							"PHP",
+							"php",
+						].map((skill) => (
+							<label
+								key={skill}
+								className='flex items-center'
+							>
+								<input
+									type='checkbox'
+									className='h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'
+									checked={filters.skills.includes(skill)}
+									onChange={() => handleSkillsChange(skill)}
+								/>
+								<span className='ml-2 text-sm'>{skill}</span>
+							</label>
+						))}
+					</div>
+				</div>
 
 				{/* Location Filter */}
 				<div>
@@ -301,6 +363,14 @@ const JobSearch: React.FC = () => {
 									<span className='bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded'>
 										{job.type}
 									</span>
+									{job.skills.map((skill) => (
+										<span
+											key={skill}
+											className='bg-green-100 text-green-800 text-xs px-2 py-1 rounded'
+										>
+											{skill}
+										</span>
+									))}
 								</div>
 								<p className='mt-2 text-sm'>{job.description}</p>
 							</div>
