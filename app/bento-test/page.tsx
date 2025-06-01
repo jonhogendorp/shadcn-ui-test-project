@@ -1,4 +1,5 @@
 // import { BellRing, Check } from "lucide-react";
+import { ToggleDemo } from "./toggle";
 
 // import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -174,6 +175,10 @@ export default function Example() {
 					<Button>Deploy</Button>
 				</CardFooter>
 			</Card>
+			{/* toggle */}
+			<div>
+				<ToggleDemo />
+			</div>
 		</div>
 	);
 }
